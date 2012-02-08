@@ -43,11 +43,7 @@ system("tcpdump -nn -r #{sample} -w ./synack.pcap tcp[13] == 18")
 puts "Parsed SYN/ACK data from PCAP in #{Time.now - beginning} seconds"
 last = Time.now
 
-<<<<<<< HEAD
-pcap = PcapFile.new.f2a(
-=======
 pcap = PacketFu::PcapFile.new.f2a(
->>>>>>> upstream/master
   :f => "./synack.pcap",
   :filter => "tcp and tcp[13] == 18"
 )
@@ -59,14 +55,9 @@ pcap.each do |pkt|
   packet = PacketFu::Packet.parse(pkt)
   synack_hash = {
     "ip" => packet.ip_saddr.to_s,
-<<<<<<< HEAD
-    "port" => packet.tcp_sport.to_s,
-    "seq" => packet.tcp_ack.to_s
-=======
     "sport" => packet.tcp_sport.to_s,
     "seq" => packet.tcp_ack.to_s,
     "dport" => packet.tcp_dport.to_s
->>>>>>> upstream/master
   }
   synackarray.push(synack_hash)
 end
@@ -130,15 +121,10 @@ pcap4.each do |pkt|
   packet = PacketFu::Packet.parse(pkt)
   syn_hash = {
     "ip" => packet.ip_daddr.to_s,
-<<<<<<< HEAD
-    "port" => packet.tcp_dport.to_s,
-    "seq" => packet.tcp_seq.to_s}
-=======
     "dport" => packet.tcp_dport.to_s,
     "seq" => packet.tcp_seq.to_s,
     "sport" => packet.tcp_sport.to_s
   }
->>>>>>> upstream/master
   synarray.push(syn_hash)
 end
 
@@ -153,14 +139,6 @@ synackarray.each do |synackpacket|
   synarray.each do |synpacket|
     temp = synpacket["seq"]
     temp2 = temp.to_i
-<<<<<<< HEAD
-    seq = temp2+1
-    if synackpacket["ip"] != synpacket["ip"] and
-      synackpacket["port"] == synpacket["port"] and
-      synackpacket["seq"] == seq.to_s
-      
-      puts "[+]BNAT DETECTED:\t Requested:"+synpacket["ip"]+":"+synpacket["port"]+"\t Responded:"+synackpacket["ip"]+":"+synackpacket["port"]+"\tSession:"+seq.to_s
-=======
     tempseq = temp2+1
     
     ip, dport, sport, seq = false, false, false, false
@@ -192,7 +170,6 @@ synackarray.each do |synackpacket|
       puts "IP and Source Port Based BNAT Detected:"
       puts "Request:  #{synpacket}"
       puts "Response: #{synackpacket}"
->>>>>>> upstream/master
     end
   end
 end
